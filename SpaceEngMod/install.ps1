@@ -1,5 +1,7 @@
 param($SourcePath, $Name)
 
+$Name = "[SPX] Automatic door script"
+
 Write-Host "[install] SourcePath = '$SourcePath', Name = '$Name'"
 $SEPath = [System.Environment]::GetFolderPath("ApplicationData")
 $SEPath = Join-Path $SEPath "/SpaceEngineers/Mods"

@@ -114,6 +114,11 @@ namespace SpaceEngMod
             Write("ERROR\n" + e);
         }
 
+        public static void Error(Exception e, string where)
+        {
+            Write("ERROR IN {" + where + "}\n" + e);
+        }
+
         private static string FormatMessage(string message, object[] args)
         {
             return string.Format(message, args.Select(FormatArgument).Cast<object>().ToArray());
