@@ -18,7 +18,7 @@ namespace SpaceEngMod
             {
                 if (_writer == null)
                 {
-                    _writer = MyAPIGateway.Utilities.WriteFileInGlobalStorage(string.Format("SpaceEngMod.{0}.log", DateTime.Now.Ticks));
+                    _writer = MyAPIGateway.Utilities.WriteFileInGlobalStorage(string.Format("SpaceEngMod.{0}.log", DateTime.Now.ToString("dd.MM.yyyy.HH.mm.ss")));
                     Write("=== Log Started ===");
                 }
 

@@ -73,12 +73,26 @@ namespace SpaceEngMod
                         Log.Write("Init() called but base.Entity is not a {0}", _typename);
                         return;
                     }
-
+                    
                     Entities.PrintTerminalActions(_typename, _typedEntity);
                     _typedEntity.CustomNameChanged += OnCustomNameChanged;
+                    
+                    //Log.Write("Init() called on {0} with {1} {2} {3} {4}", 
+                    //    _typename,
+                    //    _typedEntity.Name,
+                    //    _typedEntity.CustomName,
+                    //    _typedEntity.DisplayName,
+                    //    _typedEntity.GetFriendlyName()
+                    //    );
 
-                    OnCreated();
-                    AttachToEntity();
+                    //if (Entities.FilterByName(_typedEntity))
+                    //{
+                        AttachToEntity();
+                    //}
+                    //else
+                    //{
+                    //    Log.Write("Init() called but {0} with CustomName = {1} is not attachable", _typename, _typedEntity.CustomName);
+                    //}
                 }
                 catch (Exception e)
                 {
@@ -92,8 +106,10 @@ namespace SpaceEngMod
             if (!_attached)
             {
                 Log.Write("Attaching to {0} with CustomName = {0}", _typename, _typedEntity.CustomName);
-                _attached = true;
+                OnCreated();
                 Attach();
+
+                _attached = true;
             }
         }
 
@@ -103,6 +119,9 @@ namespace SpaceEngMod
             {
                 Log.Write("Detaching from {0} with CustomName = {1}", _typename, _typedEntity.CustomName);
                 Detach();
+                OnDestroyed();
+
+                _attached = false;
             }
         }
 
@@ -111,8 +130,18 @@ namespace SpaceEngMod
 
         protected abstract void Attach();
         protected abstract void Detach();
-        
-        protected virtual void OnCustomNameChanged(IMyTerminalBlock obj) { }
+
+        protected virtual void OnCustomNameChanged(IMyTerminalBlock obj)
+        {
+            //if (Entities.FilterByName(_typedEntity))
+            //{
+            //    AttachToEntity();
+            //}
+            //else
+            //{
+            //    DetachFromEntity();
+            //}
+        }
 
         public override void Close()
         {
@@ -131,6 +160,5 @@ namespace SpaceEngMod
             //    }
             //}
         }
-        
     }
 }

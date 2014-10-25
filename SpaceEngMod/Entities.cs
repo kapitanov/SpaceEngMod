@@ -6,6 +6,18 @@ namespace SpaceEngMod
 {
     public static class Entities
     {
+        private const string Prefix = "D:";
+
+        public static bool FilterByName(IMyTerminalBlock entity)
+        {
+            if (entity.CustomName == null)
+            {
+                return false;
+            }
+
+            return entity.CustomName.StartsWith(Prefix);
+        }
+
         public static List<Sensor> Sensors = new List<Sensor>();
 
         public static void Add(Sensor entity)
@@ -18,7 +30,7 @@ namespace SpaceEngMod
             Sensors.Remove(entity);
         }
 
-        public static List<Piston> Pistons  = new List<Piston>();
+        public static List<Piston> Pistons = new List<Piston>();
 
         public static void Add(Piston entity)
         {
@@ -56,6 +68,7 @@ namespace SpaceEngMod
 
         public static void PrintTerminalActions(string entityType, IMyTerminalBlock block)
         {
+            return;
             var actions = new List<ITerminalAction>();
             block.GetActions(actions, _ => true);
             using (Log.Scope("{0}.GetActions:", block.BlockDefinition.TypeIdString))

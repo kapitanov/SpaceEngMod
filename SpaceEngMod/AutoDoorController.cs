@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Sandbox.Common;
 using Sandbox.ModAPI;
@@ -8,7 +9,9 @@ namespace SpaceEngMod
     [MySessionComponentDescriptor(MyUpdateOrder.BeforeSimulation)]
     public sealed class AutoDoorController : MySessionComponentBase
     {
-        private const float Distance = 20;
+        private const float Distance = 25;
+        private const string Prefix = "D:";
+
         private bool _initialized;
 
         public override void UpdateBeforeSimulation()
@@ -33,8 +36,8 @@ namespace SpaceEngMod
 
             // Locate a sensor within D meters
             var sensor = Entities.Sensors
-                .Where(p => (p.Entity.GetPosition() - buttonPanelPosition).Length() <= Distance)
-                .FirstOrDefault();
+                .Where(p => p.Entity.CustomName.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase))
+                .FirstOrDefault(p => (p.Entity.GetPosition() - buttonPanelPosition).Length() <= Distance);
 
             if (sensor != null)
             {
@@ -44,11 +47,14 @@ namespace SpaceEngMod
             {
                 Log.Write("AUTODOOR: there is no sensor near this button panel");
             }
-    }
+        }
 
         private void EntityEvents_SensorStateChanged(Sensor sensor, bool state)
         {
-            // TODO filter by sensor.Entity.CustomName
+            if (!sensor.Entity.CustomName.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
 
             AutodoorHandler(sensor, state);
         }
@@ -59,25 +65,27 @@ namespace SpaceEngMod
 
             // Locate all pistons within D meters
             var pistons = Entities.Pistons
+                .Where(p => p.Entity.CustomName.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase))
                 .Where(p => (p.Entity.GetPosition() - sensorPosition).Length() <= Distance)
                 .ToList();
 
             // Locate all landing gears within D meters
             var landingGears = Entities.LandingGears
+                .Where(p => p.Entity.CustomName.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase))
                 .Where(p => (p.Entity.GetPosition() - sensorPosition).Length() <= Distance)
                 .ToList();
 
-            
             Log.Write("AUTODOOR");
-            Log.Write("Got {0} pistons, {1} landing gears within {2}m", pistons.Count, landingGears.Count, Distance);
+            Log.Write("Got {0} pistons, {1} landing gears within {2}m while sensor is {3}", pistons.Count, landingGears.Count, Distance,
+                sensor.Entity.CustomName);
 
-            var minPistDist = pistons.Min(p => (p.Entity.GetPosition() - sensorPosition).Length());
-            var maxPistDist = pistons.Max(p => (p.Entity.GetPosition() - sensorPosition).Length());
-            Log.Write("PistDist : [{0}m - {1}m]", minPistDist, maxPistDist);
+            //var minPistDist = pistons.Min(p => (p.Entity.GetPosition() - sensorPosition).Length());
+            //var maxPistDist = pistons.Max(p => (p.Entity.GetPosition() - sensorPosition).Length());
+            //Log.Write("PistDist : [{0}m - {1}m]", minPistDist, maxPistDist);
 
-            var minLgDist = landingGears.Min(p => (p.Entity.GetPosition() - sensorPosition).Length());
-            var maxLgDist = landingGears.Max(p => (p.Entity.GetPosition() - sensorPosition).Length());
-            Log.Write("LgDist : [{0}m - {1}m]", minLgDist, maxLgDist);
+            //var minLgDist = landingGears.Min(p => (p.Entity.GetPosition() - sensorPosition).Length());
+            //var maxLgDist = landingGears.Max(p => (p.Entity.GetPosition() - sensorPosition).Length());
+            //Log.Write("LgDist : [{0}m - {1}m]", minLgDist, maxLgDist);
 
             if (open)
             {
@@ -92,7 +100,7 @@ namespace SpaceEngMod
 
                 foreach (var piston in pistons)
                 {
-                    piston.SetVelocity(-2);
+                    piston.SetVelocity(-5);
                 }
 
                 Log.Write("AUTODOOR OPEN");
@@ -110,7 +118,7 @@ namespace SpaceEngMod
 
                 foreach (var piston in pistons)
                 {
-                    piston.SetVelocity(2);
+                    piston.SetVelocity(5);
                 }
 
                 Log.Write("AUTODOOR CLOSE");
@@ -130,15 +138,23 @@ namespace SpaceEngMod
                     index
                 })
                     .OrderBy(_ => _.D)
-                    .First();
+                    .FirstOrDefault();
 
-                _pendingLocks[piston] = p.landingGear;
-                landingGears.RemoveAt(p.index);
+                if (p != null)
+                {
+                    _pendingLocks[piston] = p.landingGear;
+                    landingGears.RemoveAt(p.index);
+                }
             }
         }
 
         private void EntityEvents_PistonLimitReached(Piston piston, bool arg2)
         {
+            if (!piston.Entity.CustomName.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
             LandingGear landingGear;
             if (_pendingLocks.TryGetValue(piston, out landingGear))
             {
