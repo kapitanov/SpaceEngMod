@@ -84,7 +84,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoDoor.cs" />
     <Compile Include="AutoDoorController.cs" />
+    <Compile Include="AutoDoorState.cs" />
     <Compile Include="ButtonPanel.cs" />
     <Compile Include="Entities.cs" />
     <Compile Include="EntityComponent.cs" />
@@ -93,6 +95,7 @@
     <Compile Include="IEntityController.cs" />
     <Compile Include="LandingGear.cs" />
     <Compile Include="Log.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sensor.cs" />
     <Compile Include="Piston.cs" />

@@ -1,3 +1,4 @@
+using Sandbox.Common;
 using Sandbox.Common.Components;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.ModAPI.Ingame;
@@ -14,6 +15,7 @@ namespace SpaceEngMod
         protected override void OnCreated()
         {
             Entities.Add(this);
+            Entity.NeedsUpdate |= MyEntityUpdateEnum.EACH_100TH_FRAME;
         }
 
         protected override void OnDestroyed()
@@ -35,6 +37,11 @@ namespace SpaceEngMod
         {
             Log.Scope("ButtonPanel.OnButtonPressed({0})", key);
             EntityEvents.ButtonPressed.Raise(this, key);
+        }
+
+        public override void UpdateBeforeSimulation100()
+        {
+            EntityEvents.ButtonUpdate100.Raise(this);
         }
     }
 }

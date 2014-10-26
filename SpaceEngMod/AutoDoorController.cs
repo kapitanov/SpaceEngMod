@@ -10,7 +10,7 @@ namespace SpaceEngMod
     public sealed class AutoDoorController : MySessionComponentBase
     {
         private const float Distance = 25;
-        private const string Prefix = "D:";
+        public const string Prefix = "D:";
 
         private bool _initialized;
 
@@ -23,31 +23,24 @@ namespace SpaceEngMod
                     EntityEvents.ButtonPressed.Subscribe(EntityEvents_ButtonPressed);
                     EntityEvents.SensorStateChanged.Subscribe(EntityEvents_SensorStateChanged);
                     EntityEvents.PistonLimitReached.Subscribe(EntityEvents_PistonLimitReached);
+                    EntityEvents.ButtonUpdate100.Subscribe(EntityEvents_ButtonUpdate10);
                     _initialized = true;
                 }
             }
 
+
+
             base.UpdateBeforeSimulation();
         }
-
+        
         private void EntityEvents_ButtonPressed(ButtonPanel buttonPanel, int button)
         {
             try
             {
-                var buttonPanelPosition = buttonPanel.Entity.GetPosition();
-
-                // Locate a sensor within D meters
-                var sensor = Entities.Sensors
-                    .Where(p => p.Entity.CustomName.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase))
-                    .FirstOrDefault(p => (p.Entity.GetPosition() - buttonPanelPosition).Length() <= Distance);
-
-                if (sensor != null)
+                var autodoor = GetAutodoor(buttonPanel);
+                if (autodoor != null)
                 {
-                    AutodoorHandler(sensor, button == 0 || button == 1);
-                }
-                else
-                {
-                    Log.Write("AUTODOOR: there is no sensor near this button panel");
+                    autodoor.Toggle(this);
                 }
             }
             catch (Exception e)
@@ -65,7 +58,19 @@ namespace SpaceEngMod
                     return;
                 }
 
-                AutodoorHandler(sensor, state);
+                var autodoor = GetAutodoor(sensor);
+                if (autodoor != null)
+                {
+                    if (state)
+                    {
+                        autodoor.Open(this);
+                    }
+                    else
+                    {
+                        autodoor.Close(this);
+                    }
+                    
+                }
             }
             catch (Exception e)
             {
@@ -73,98 +78,38 @@ namespace SpaceEngMod
             }
         }
 
-        private void AutodoorHandler(Sensor sensor, bool open)
+        private bool _notificationShown;
+
+        private void EntityEvents_ButtonUpdate10(ButtonPanel buttonPanel)
         {
-            using (Log.Scope("AutodoorHandler"))
+            if ((MyAPIGateway.Session.Player.GetPosition() - buttonPanel.Entity.GetPosition()).Length() < 5)
             {
-                try
+                var autodoor = GetAutodoor(buttonPanel);
+                if (autodoor != null)
                 {
-                    var sensorPosition = sensor.Entity.GetPosition();
-
-                    // Locate all pistons within D meters
-                    Log.Write("AUTODOOR: fetch pistons");
-                    var pistons = Entities.Pistons
-                        .Where(p => p.Entity.CustomName.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase))
-                        .Where(p => (p.Entity.GetPosition() - sensorPosition).Length() <= Distance)
-                        .ToList();
-
-                    // Locate all landing gears within D meters
-                    Log.Write("AUTODOOR: fetch landing gears");
-                    var landingGears = Entities.LandingGears
-                        .Where(p => p.Entity.CustomName.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase))
-                        .Where(p => (p.Entity.GetPosition() - sensorPosition).Length() <= Distance)
-                        .ToList();
-
-                    Log.Write("Got {0} pistons, {1} landing gears within {2}m while sensor is {3}", pistons.Count,
-                        landingGears.Count, Distance,
-                        sensor.Entity.CustomName);
-                    if (open)
+                    if (!_notificationShown)
                     {
-                        // ======= OPEN DOOR =======
-
-                        MyAPIGateway.Utilities.ShowNotification("Autodoor: Opening");
-
-                        foreach (var landingGear in landingGears)
-                        {
-                            landingGear.Unlock();
-                        }
-
-                        foreach (var piston in pistons)
-                        {
-                            piston.SetVelocity(-5);
-                        }
-
-                        Log.Write("AUTODOOR OPEN");
+                        MyAPIGateway.Utilities.ShowNotification("This button controls autodoor", 1000, MyFontEnum.Green);
+                        _notificationShown = true;
                     }
-                    else
-                    {
-                        // ======= CLOSE DOOR =======
-
-                        MyAPIGateway.Utilities.ShowNotification("Autodoor: Closing");
-
-                        foreach (var landingGear in landingGears)
-                        {
-                            landingGear.Unlock();
-                        }
-
-                        foreach (var piston in pistons)
-                        {
-                            piston.SetVelocity(5);
-                        }
-
-                        Log.Write("AUTODOOR CLOSE");
-                    }
-
-                    // When each of pistons reaches limit we will lock the corresponding (nearest) piston
-                    // See EntityEvents_PistonLimitReached
-                    Log.Write("AUTODOOR: setting _pendingLocks");
-                    _pendingLocks.Clear();
-                    foreach (var piston in pistons)
-                    {
-                        var pistonPosition = piston.Entity.GetPosition();
-
-                        var p = landingGears.Select((landingGear, index) => new
-                        {
-                            landingGear,
-                            D = (landingGear.Entity.GetPosition() - pistonPosition).Length(),
-                            index
-                        })
-                            .OrderBy(_ => _.D)
-                            .FirstOrDefault();
-
-                        if (p != null)
-                        {
-                            _pendingLocks[piston] = p.landingGear;
-                            landingGears.RemoveAt(p.index);
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Log.Error(e, "AutodoorHandler");
                 }
             }
+            else
+            {
+                _notificationShown = false;
+            }
         }
+
+        public void ClearPendingLandingGears()
+        {
+            _pendingLocks.Clear();
+        }
+
+        public void SetPendingLandingGear(Piston piston, LandingGear landingGear)
+        {
+            _pendingLocks[piston] = landingGear;
+        }
+
 
         private void EntityEvents_PistonLimitReached(Piston piston, bool arg2)
         {
@@ -189,5 +134,50 @@ namespace SpaceEngMod
         }
 
         private readonly Dictionary<Piston, LandingGear> _pendingLocks = new Dictionary<Piston, LandingGear>();
+        private readonly Dictionary<Sensor, AutoDoor> _autoDoors = new Dictionary<Sensor, AutoDoor>();
+
+        private AutoDoor GetAutodoor(Sensor sensor)
+        {
+            if (!sensor.Entity.CustomName.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase))
+            {
+                return null;
+            }
+
+            AutoDoor autodoor;
+            if (!_autoDoors.TryGetValue(sensor, out autodoor))
+            {
+                autodoor = new AutoDoor(sensor);
+                _autoDoors.Add(sensor, autodoor);
+            }
+
+            return autodoor;
+        }
+
+        private AutoDoor GetAutodoor(ButtonPanel buttonPanel)
+        {
+            if (!buttonPanel.Entity.CustomName.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase))
+            {
+                return null;
+            }
+
+            // Locate a sensor within D meters within the same grid
+            var buttonPanelPosition = buttonPanel.Entity.GetPosition();
+            var sensor = Entities.Sensors
+                .Where(p => p.Entity.CustomName.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase))
+                .Where(p => p.Entity.CubeGrid == buttonPanel.Entity.CubeGrid)
+                .FirstOrDefault(p => (p.Entity.GetPosition() - buttonPanelPosition).Length() <= Distance);
+
+            if (sensor != null)
+            {
+                var autodoor = GetAutodoor(sensor);
+                return autodoor;
+            }
+
+            MyAPIGateway.Utilities.ShowNotification(
+                string.Format("AUTODOOR: there is no sensor with name prefix '{0}' nearby", Prefix),
+                font: MyFontEnum.Red);
+            Log.Write("AUTODOOR: there is no sensor nearby this button panel");
+            return null;
+        }
     }
 }

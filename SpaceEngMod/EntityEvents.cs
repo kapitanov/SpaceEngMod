@@ -9,5 +9,7 @@ namespace SpaceEngMod
         public static readonly EntityEvent<LandingGear, bool> LandingGearStateChanged = new EntityEvent<LandingGear, bool>();
 
         public static readonly EntityEvent<ButtonPanel, int> ButtonPressed =new EntityEvent<ButtonPanel, int>();
+
+        public static readonly EntityEvent<ButtonPanel> ButtonUpdate100 = new EntityEvent<ButtonPanel>();
     }
 }

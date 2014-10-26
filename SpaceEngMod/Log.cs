@@ -63,7 +63,7 @@ namespace SpaceEngMod
 
         public static void In(string message)
         {
-            _indentLevel++;
+            //_indentLevel++;
             Write(message + " IN");
         }
 
@@ -75,7 +75,7 @@ namespace SpaceEngMod
         public static void Out(string message)
         {
             Write(message + " OUT");
-            _indentLevel--;
+            //_indentLevel--;
         }
 
         public static void Out(string message, params object[] args)
