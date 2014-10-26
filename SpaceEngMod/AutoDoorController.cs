@@ -28,11 +28,9 @@ namespace SpaceEngMod
                 }
             }
 
-
-
             base.UpdateBeforeSimulation();
         }
-        
+
         private void EntityEvents_ButtonPressed(ButtonPanel buttonPanel, int button)
         {
             try
@@ -69,7 +67,7 @@ namespace SpaceEngMod
                     {
                         autodoor.Close(this);
                     }
-                    
+
                 }
             }
             catch (Exception e)
@@ -82,21 +80,28 @@ namespace SpaceEngMod
 
         private void EntityEvents_ButtonUpdate10(ButtonPanel buttonPanel)
         {
-            if ((MyAPIGateway.Session.Player.GetPosition() - buttonPanel.Entity.GetPosition()).Length() < 5)
+            try
             {
-                var autodoor = GetAutodoor(buttonPanel);
-                if (autodoor != null)
+                if ((MyAPIGateway.Session.Player.GetPosition() - buttonPanel.Entity.GetPosition()).Length() < 5)
                 {
-                    if (!_notificationShown)
+                    var autodoor = GetAutodoor(buttonPanel);
+                    if (autodoor != null)
                     {
-                        MyAPIGateway.Utilities.ShowNotification("This button controls autodoor", 1000, MyFontEnum.Green);
-                        _notificationShown = true;
+                        if (!_notificationShown)
+                        {
+                            MyAPIGateway.Utilities.ShowNotification("This button controls autodoor", 1000, MyFontEnum.Green);
+                            _notificationShown = true;
+                        }
                     }
                 }
+                else
+                {
+                    _notificationShown = false;
+                }
             }
-            else
+            catch (Exception e)
             {
-                _notificationShown = false;
+                Log.Error(e, "EntityEvents_SensorStateChanged");
             }
         }
 
