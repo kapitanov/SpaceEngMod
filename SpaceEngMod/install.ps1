@@ -1,6 +1,6 @@
 param($SourcePath)
-$ProjectName = "SpaceEngMod_AutoDoor"
-$Name = "[SPX] Automatic door script"
+$ProjectName = "SPX.Station.Infrastructure"
+$Name = "[SPX] Station Infrastructure Mod"
 
 Write-Host "[install] SourcePath = '$SourcePath', ProjectName = '$ProjectName', Name = '$Name'"
 $SEPath = [System.Environment]::GetFolderPath("ApplicationData")
@@ -28,6 +28,6 @@ Write-Host "[install] Creating folder '$Path/Data/Scripts/$ProjectName'"
 MkDir "$Path/Data/Scripts/$ProjectName" | Out-Null
 
 Write-Host "[install] Copying files"
-Get-ChildItem -Path $SourcePath -Filter "*.cs" | Copy-Item -Destination "$Path/Data/Scripts/$ProjectName" -Verbose
+Get-ChildItem -recurse -Path $SourcePath -exclude "TemporaryGeneratedFile*" -Filter "*.cs" | Copy-Item -Destination "$Path/Data/Scripts/$ProjectName" -Verbose
 
 Write-Host "[install] Done!"

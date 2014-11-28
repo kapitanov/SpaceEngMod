@@ -1,4 +1,4 @@
-namespace SpaceEngMod
+namespace SPX.Station.Infrastructure.Implementation
 {
     public enum AutoDoorState
     {

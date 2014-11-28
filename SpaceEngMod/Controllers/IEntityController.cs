@@ -1,6 +1,6 @@
-using Sandbox.ModAPI.Ingame;
+﻿using Sandbox.ModAPI.Ingame;
 
-namespace SpaceEngMod
+namespace SPX.Station.Infrastructure.Controllers
 {
     public interface IEntityController
     {

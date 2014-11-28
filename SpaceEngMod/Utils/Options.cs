@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SpaceEngMod
+namespace SPX.Station.Infrastructure.Utils
 {
     public sealed class Options
     {

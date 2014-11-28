@@ -1,9 +1,13 @@
-using System;
+﻿using System;
+
 using Sandbox.Common.Components;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.ModAPI.Ingame;
 
-namespace SpaceEngMod
+using SPX.Station.Infrastructure.Controllers;
+using SPX.Station.Infrastructure.Utils;
+
+namespace SPX.Station.Infrastructure.ApiEntities
 {
     public abstract class EntityComponent<T> : MyGameLogicComponent, IEntityController
         where T : class, IMyTerminalBlock

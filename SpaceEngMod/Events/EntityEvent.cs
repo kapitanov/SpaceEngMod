@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SpaceEngMod
+namespace SPX.Station.Infrastructure.Events
 {
     public sealed class EntityEvent<TEntity>
     {

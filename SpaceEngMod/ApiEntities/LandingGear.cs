@@ -2,7 +2,10 @@ using Sandbox.Common.Components;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.ModAPI.Ingame;
 
-namespace SpaceEngMod
+using SPX.Station.Infrastructure.Controllers;
+using SPX.Station.Infrastructure.Events;
+
+namespace SPX.Station.Infrastructure.ApiEntities
 {
     [MyEntityComponentDescriptor(typeof(MyObjectBuilder_LandingGear))]
     public sealed class LandingGear : EntityComponent<IMyLandingGear>

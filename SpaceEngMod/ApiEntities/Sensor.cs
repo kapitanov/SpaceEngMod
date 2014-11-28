@@ -3,7 +3,9 @@ using Sandbox.Common.Components;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.ModAPI.Ingame;
 
-namespace SpaceEngMod
+using SPX.Station.Infrastructure.Events;
+
+namespace SPX.Station.Infrastructure.ApiEntities
 {
     [MyEntityComponentDescriptor(typeof(MyObjectBuilder_SensorBlock))]
     public sealed class Sensor : EntityComponent<IMySensorBlock>
