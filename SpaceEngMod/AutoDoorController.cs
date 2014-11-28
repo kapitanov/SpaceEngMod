@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Sandbox.Common;
+using Sandbox.Common.ObjectBuilders;
 using Sandbox.ModAPI;
 
 namespace SpaceEngMod
