@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Sandbox.Common;
 using Sandbox.ModAPI;
 
-namespace SpaceEngMod
+using SPX.Station.Infrastructure.ApiEntities;
+using SPX.Station.Infrastructure.Events;
+using SPX.Station.Infrastructure.Implementation;
+using SPX.Station.Infrastructure.Utils;
+
+namespace SPX.Station.Infrastructure.Controllers
 {
     [MySessionComponentDescriptor(MyUpdateOrder.BeforeSimulation)]
     public sealed class AutoDoorController : MySessionComponentBase
     {
         private const float Distance = 25;
-        public const string Prefix = "D:";
-
+        
         private bool _initialized;
 
         public override void UpdateBeforeSimulation()
@@ -20,10 +25,10 @@ namespace SpaceEngMod
             {
                 using (Log.Scope("AutoDoorController.Initialize"))
                 {
-                    EntityEvents.ButtonPressed.Subscribe(EntityEvents_ButtonPressed);
+                    EntityEvents.AutoDoorButtonPressed.Subscribe(EntityEvents_ButtonPressed);
                     EntityEvents.SensorStateChanged.Subscribe(EntityEvents_SensorStateChanged);
                     EntityEvents.PistonLimitReached.Subscribe(EntityEvents_PistonLimitReached);
-                    EntityEvents.ButtonUpdate100.Subscribe(EntityEvents_ButtonUpdate10);
+                    EntityEvents.AutoDoorButtonUpdate100.Subscribe(EntityEvents_ButtonUpdate10);
                     _initialized = true;
                 }
             }
@@ -51,7 +56,7 @@ namespace SpaceEngMod
         {
             try
             {
-                if (!sensor.Entity.CustomName.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase))
+                if (!sensor.Entity.CustomName.StartsWith(Constants.AutoDoorPrefix, StringComparison.OrdinalIgnoreCase))
                 {
                     return;
                 }
@@ -110,17 +115,17 @@ namespace SpaceEngMod
             _pendingLocks.Clear();
         }
 
-        public void SetPendingLandingGear(Piston piston, LandingGear landingGear)
+        public void SetPendingLandingGear(AbstractPiston piston, LandingGear landingGear)
         {
             _pendingLocks[piston] = landingGear;
         }
 
 
-        private void EntityEvents_PistonLimitReached(Piston piston, bool arg2)
+        private void EntityEvents_PistonLimitReached(AbstractPiston piston, bool arg2)
         {
             try
             {
-                if (!piston.Entity.CustomName.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase))
+                if (!piston.Entity.CustomName.StartsWith(Constants.AutoDoorPrefix, StringComparison.OrdinalIgnoreCase))
                 {
                     return;
                 }
@@ -138,12 +143,12 @@ namespace SpaceEngMod
             }
         }
 
-        private readonly Dictionary<Piston, LandingGear> _pendingLocks = new Dictionary<Piston, LandingGear>();
+        private readonly Dictionary<AbstractPiston, LandingGear> _pendingLocks = new Dictionary<AbstractPiston, LandingGear>();
         private readonly Dictionary<Sensor, AutoDoor> _autoDoors = new Dictionary<Sensor, AutoDoor>();
 
         private AutoDoor GetAutodoor(Sensor sensor)
         {
-            if (!sensor.Entity.CustomName.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase))
+            if (!sensor.Entity.CustomName.StartsWith(Constants.AutoDoorPrefix, StringComparison.OrdinalIgnoreCase))
             {
                 return null;
             }
@@ -160,7 +165,7 @@ namespace SpaceEngMod
 
         private AutoDoor GetAutodoor(ButtonPanel buttonPanel)
         {
-            if (!buttonPanel.Entity.CustomName.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase))
+            if (!buttonPanel.Entity.CustomName.StartsWith(Constants.AutoDoorPrefix, StringComparison.OrdinalIgnoreCase))
             {
                 return null;
             }
@@ -168,7 +173,7 @@ namespace SpaceEngMod
             // Locate a sensor within D meters within the same grid
             var buttonPanelPosition = buttonPanel.Entity.GetPosition();
             var sensor = Entities.Sensors
-                .Where(p => p.Entity.CustomName.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase))
+                .Where(p => p.Entity.CustomName.StartsWith(Constants.AutoDoorPrefix, StringComparison.OrdinalIgnoreCase))
                 .Where(p => p.Entity.CubeGrid == buttonPanel.Entity.CubeGrid)
                 .FirstOrDefault(p => (p.Entity.GetPosition() - buttonPanelPosition).Length() <= Distance);
 
@@ -179,7 +184,7 @@ namespace SpaceEngMod
             }
 
             MyAPIGateway.Utilities.ShowNotification(
-                string.Format("AUTODOOR: there is no sensor with name prefix '{0}' nearby", Prefix),
+                string.Format("AUTODOOR: there is no sensor with name prefix '{0}' nearby", Constants.AutoDoorPrefix),
                 font: MyFontEnum.Red);
             Log.Write("AUTODOOR: there is no sensor nearby this button panel");
             return null;

@@ -1,13 +1,14 @@
 using System.Collections.Generic;
+
 using Sandbox.ModAPI.Ingame;
 using Sandbox.ModAPI.Interfaces;
 
-namespace SpaceEngMod
+using SPX.Station.Infrastructure.Utils;
+
+namespace SPX.Station.Infrastructure.ApiEntities
 {
     public static class Entities
     {
-        private const string Prefix = "D:";
-
         public static bool FilterByName(IMyTerminalBlock entity)
         {
             if (entity.CustomName == null)
@@ -15,7 +16,7 @@ namespace SpaceEngMod
                 return false;
             }
 
-            return entity.CustomName.StartsWith(Prefix);
+            return entity.CustomName.StartsWith(Constants.SpacePortPrefix);
         }
 
         public static List<Sensor> Sensors = new List<Sensor>();
@@ -30,14 +31,15 @@ namespace SpaceEngMod
             Sensors.Remove(entity);
         }
 
-        public static List<Piston> Pistons = new List<Piston>();
+        public static List<AbstractPiston> Pistons = new List<AbstractPiston>();
 
-        public static void Add(Piston entity)
+        public static void Add(AbstractPiston entity)
         {
+            Log.Scope("Piston added ({0})", entity.Entity.CustomName);
             Pistons.Add(entity);
         }
 
-        public static void Remove(Piston entity)
+        public static void Remove(AbstractPiston entity)
         {
             Pistons.Remove(entity);
         }

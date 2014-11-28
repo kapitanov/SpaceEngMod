@@ -1,9 +1,12 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
+
 using Sandbox.ModAPI.Ingame;
 using Sandbox.ModAPI.Interfaces;
 
-namespace SpaceEngMod
+using SPX.Station.Infrastructure.Utils;
+
+namespace SPX.Station.Infrastructure.Controllers
 {
     public sealed class TerminalAction
     {
@@ -119,4 +122,3 @@ namespace SpaceEngMod
         }
     }
 }
- 

@@ -1,28 +1,101 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+
 using Sandbox.ModAPI;
+
 using VRageMath;
 
-namespace SpaceEngMod
+namespace SPX.Station.Infrastructure.Utils
 {
     public static class Log
     {
-        private static readonly TextWriter FailureTextWriter = TextWriter.Null;
-        private static TextWriter _writer;
-        private static int _indentLevel;
+        private interface ILogWriter : IDisposable
+        {
+            ILogWriter InheritWriter();
+            void Write(string line);
+        }
 
-        private static TextWriter GetWriter()
+        private sealed class FileLogWriter : ILogWriter
+        {
+            private readonly TextWriter _writer;
+
+            public FileLogWriter(TextWriter writer)
+            {
+                _writer = writer;
+            }
+
+            public FileLogWriter()
+                : this(
+                    MyAPIGateway.Utilities.WriteFileInGlobalStorage(
+                        string.Format("SPX.SpacePort.Mod.{0}.log",
+                        DateTime.Now.ToString("dd.MM.yyyy.HH.mm.ss"))))
+            { }
+
+            ILogWriter ILogWriter.InheritWriter()
+            {
+                return this;
+            }
+
+            void ILogWriter.Write(string line)
+            {
+                _writer.Write(line);
+                _writer.Flush();
+            }
+
+            public void Dispose()
+            {
+                _writer.Dispose();
+            }
+        }
+
+        private sealed class PendingLogWriter : ILogWriter
+        {
+            private readonly List<string> _pendingMessages = new List<string>();
+
+            ILogWriter ILogWriter.InheritWriter()
+            {
+                if (MyAPIGateway.Utilities == null)
+                {
+                    return this;
+                }
+
+                ILogWriter writer = new FileLogWriter();
+                foreach (var message in _pendingMessages)
+                {
+                    writer.Write(message);
+                }
+                _pendingMessages.Clear();
+
+                return writer;
+            }
+
+            void ILogWriter.Write(string line)
+            {
+                _pendingMessages.Add(line);
+            }
+
+            public void Dispose() { }
+        }
+
+        private static ILogWriter _writer = new PendingLogWriter();
+
+        private static ILogWriter GetWriter()
         {
             try
             {
                 if (_writer == null)
                 {
-                    _writer = MyAPIGateway.Utilities.WriteFileInGlobalStorage(string.Format("SpaceEngMod.{0}.log", DateTime.Now.ToString("dd.MM.yyyy.HH.mm.ss")));
-                    Write("=== Log Started ===");
+                    _writer = new PendingLogWriter();
                 }
 
-                return _writer;
+                var inheritedWriter = _writer.InheritWriter();
+                if (inheritedWriter != null)
+                {
+                    _writer = inheritedWriter;
+                }
             }
             catch (Exception e)
             {
@@ -30,30 +103,40 @@ namespace SpaceEngMod
                 {
                     MyAPIGateway.Utilities.ShowNotification("Unable to write into log file due to '" + e.Message + "'");
                 }
-                
-                return FailureTextWriter;
+
+                _writer = new PendingLogWriter();
             }
+
+            return _writer;
+        }
+
+        public static void Initialize()
+        {
+            GetWriter();
         }
 
         public static void Release()
         {
+            if (_writer != null)
+            {
+                _writer.Dispose();
+                _writer = null;
+            }
         }
 
         public static void Write(string message)
         {
             var writer = GetWriter();
 
-            writer.Write("[");
-            writer.Write(DateTime.Now.ToString("d.MM.yyyy HH:mm:ss"));
-            writer.Write("] ");
-            for (var i = 0; i < _indentLevel; i++)
-            {
-                writer.Write('\t');
-            }
-            writer.Write(message);
-            writer.WriteLine();
+            var messageBuilder = new StringBuilder();
+            messageBuilder.Append("[");
+            messageBuilder.Append(DateTime.Now.ToString("d.MM.yyyy HH:mm:ss"));
+            messageBuilder.Append("] ");
 
-            writer.Flush();
+            messageBuilder.Append(message);
+            messageBuilder.Append('\n');
+
+            writer.Write(messageBuilder.ToString());
         }
 
         public static void Write(string message, params object[] args)
@@ -63,7 +146,6 @@ namespace SpaceEngMod
 
         public static void In(string message)
         {
-            //_indentLevel++;
             Write(message + " IN");
         }
 
@@ -75,7 +157,6 @@ namespace SpaceEngMod
         public static void Out(string message)
         {
             Write(message + " OUT");
-            //_indentLevel--;
         }
 
         public static void Out(string message, params object[] args)
@@ -128,7 +209,7 @@ namespace SpaceEngMod
         {
             if (arg is Vector3I)
             {
-                var value = (Vector3I) arg;
+                var value = (Vector3I)arg;
                 return string.Format("{{{0}, {1}, {2}}}", value.X, value.Y, value.Z);
             }
 

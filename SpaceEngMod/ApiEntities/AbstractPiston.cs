@@ -1,19 +1,23 @@
 using System;
-using Sandbox.Common.Components;
-using Sandbox.Common.ObjectBuilders;
+
 using Sandbox.ModAPI.Ingame;
 
-namespace SpaceEngMod
+using SPX.Station.Infrastructure.Controllers;
+using SPX.Station.Infrastructure.Events;
+using SPX.Station.Infrastructure.Utils;
+
+namespace SPX.Station.Infrastructure.ApiEntities
 {
-    [MyEntityComponentDescriptor(typeof(MyObjectBuilder_PistonBase))]
-    public sealed class Piston : EntityComponent<IMyPistonBase>
+    public abstract class AbstractPiston : EntityComponent<IMyPistonBase>
     {
         private readonly TerminalAction _resetVelocityAction;
         private readonly TerminalAction _increaseVelocityAction;
         private readonly TerminalAction _decreaseVelocityAction;
         private readonly TerminalAction _reverseAction;
 
-        public Piston()
+        private string _hangarCode;
+
+        public AbstractPiston()
             : base("Piston", "IMyPistonBase")
         {
             _resetVelocityAction = new TerminalAction(this, TerminalAction.ResetVelocity);
@@ -83,6 +87,19 @@ namespace SpaceEngMod
         private void OnLimitReached(bool state)
         {
             EntityEvents.PistonLimitReached.Raise(this, state);
+        }
+
+        public string HangarCode
+        {
+            get
+            {
+                var options = new Options(Entity.CustomName);
+                _hangarCode = options.Get("HC", string.Empty);
+
+                Log.Write("Pistons HangarCode Received ({0}) on Piston {1}", _hangarCode, Entity.CustomName);
+
+                return _hangarCode;
+            }
         }
     }
 }

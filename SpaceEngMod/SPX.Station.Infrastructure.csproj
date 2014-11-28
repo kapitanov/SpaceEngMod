@@ -7,8 +7,8 @@
     <ProjectGuid>{C522296A-7C58-40FE-9536-4B1D7D865952}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SpaceEngMod</RootNamespace>
-    <AssemblyName>SpaceEngMod</AssemblyName>
+    <RootNamespace>SPX.Station.Infrastructure</RootNamespace>
+    <AssemblyName>SPX.Station.Infrastructure</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,37 +31,37 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Sandbox.Audio">
-      <HintPath>..\References\Sandbox.Audio.dll</HintPath>
+      <HintPath>..\..\..\..\Fun\Gamez\Steam\steamapps\common\SpaceEngineers\Bin\Sandbox.Audio.dll</HintPath>
     </Reference>
     <Reference Include="Sandbox.Common">
-      <HintPath>..\References\Sandbox.Common.dll</HintPath>
+      <HintPath>..\..\..\..\Fun\Gamez\Steam\steamapps\common\SpaceEngineers\Bin\Sandbox.Common.dll</HintPath>
     </Reference>
     <Reference Include="Sandbox.Common.XmlSerializers">
-      <HintPath>..\References\Sandbox.Common.XmlSerializers.dll</HintPath>
+      <HintPath>..\..\..\..\Fun\Gamez\Steam\steamapps\common\SpaceEngineers\Bin\Sandbox.Common.XmlSerializers.dll</HintPath>
     </Reference>
     <Reference Include="Sandbox.Game">
-      <HintPath>..\References\Sandbox.Game.dll</HintPath>
+      <HintPath>..\..\..\..\Fun\Gamez\Steam\steamapps\common\SpaceEngineers\Bin\Sandbox.Game.dll</HintPath>
     </Reference>
     <Reference Include="Sandbox.Graphics">
-      <HintPath>..\References\Sandbox.Graphics.dll</HintPath>
+      <HintPath>..\..\..\..\Fun\Gamez\Steam\steamapps\common\SpaceEngineers\Bin\Sandbox.Graphics.dll</HintPath>
     </Reference>
     <Reference Include="Sandbox.Input">
-      <HintPath>..\References\Sandbox.Input.dll</HintPath>
+      <HintPath>..\..\..\..\Fun\Gamez\Steam\steamapps\common\SpaceEngineers\Bin\Sandbox.Input.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX">
-      <HintPath>..\References\SharpDX.dll</HintPath>
+      <HintPath>..\..\..\..\Fun\Gamez\Steam\steamapps\common\SpaceEngineers\Bin\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D9">
-      <HintPath>..\References\SharpDX.Direct3D9.dll</HintPath>
+      <HintPath>..\..\..\..\Fun\Gamez\Steam\steamapps\common\SpaceEngineers\Bin\SharpDX.Direct3D9.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DirectInput">
-      <HintPath>..\References\SharpDX.DirectInput.dll</HintPath>
+      <HintPath>..\..\..\..\Fun\Gamez\Steam\steamapps\common\SpaceEngineers\Bin\SharpDX.DirectInput.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.RawInput">
-      <HintPath>..\References\SharpDX.RawInput.dll</HintPath>
+      <HintPath>..\..\..\..\Fun\Gamez\Steam\steamapps\common\SpaceEngineers\Bin\SharpDX.RawInput.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.XAudio2">
-      <HintPath>..\References\SharpDX.XAudio2.dll</HintPath>
+      <HintPath>..\..\..\..\Fun\Gamez\Steam\steamapps\common\SpaceEngineers\Bin\SharpDX.XAudio2.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -71,39 +71,47 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="VRage.Common">
-      <HintPath>..\References\VRage.Common.dll</HintPath>
+      <HintPath>..\..\..\..\Fun\Gamez\Steam\steamapps\common\SpaceEngineers\Bin\VRage.Common.dll</HintPath>
     </Reference>
     <Reference Include="VRage.Library">
-      <HintPath>..\References\VRage.Library.dll</HintPath>
+      <HintPath>..\..\..\..\Fun\Gamez\Steam\steamapps\common\SpaceEngineers\Bin\VRage.Library.dll</HintPath>
     </Reference>
     <Reference Include="VRage.Math">
-      <HintPath>..\References\VRage.Math.dll</HintPath>
+      <HintPath>..\..\..\..\Fun\Gamez\Steam\steamapps\common\SpaceEngineers\Bin\VRage.Math.dll</HintPath>
     </Reference>
     <Reference Include="VRage.Render">
-      <HintPath>..\References\VRage.Render.dll</HintPath>
+      <HintPath>..\..\..\..\Fun\Gamez\Steam\steamapps\common\SpaceEngineers\Bin\VRage.Render.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutoDoor.cs" />
-    <Compile Include="AutoDoorController.cs" />
-    <Compile Include="AutoDoorState.cs" />
-    <Compile Include="ButtonPanel.cs" />
-    <Compile Include="Entities.cs" />
-    <Compile Include="EntityComponent.cs" />
-    <Compile Include="EntityEvent.cs" />
-    <Compile Include="EntityEvents.cs" />
-    <Compile Include="IEntityController.cs" />
-    <Compile Include="LandingGear.cs" />
-    <Compile Include="Log.cs" />
-    <Compile Include="Options.cs" />
+    <Compile Include="ApiEntities\ExtendedPistonBase.cs" />
+    <Compile Include="ApiEntities\PistonBase.cs" />
+    <Compile Include="Implementation\AutoDoor.cs" />
+    <Compile Include="Controllers\AutoDoorController.cs" />
+    <Compile Include="Implementation\AutoDoorState.cs" />
+    <Compile Include="ApiEntities\ButtonPanel.cs" />
+    <Compile Include="ApiEntities\ButtonType.cs" />
+    <Compile Include="Utils\Constants.cs" />
+    <Compile Include="ApiEntities\Entities.cs" />
+    <Compile Include="ApiEntities\EntityComponent.cs" />
+    <Compile Include="Events\EntityEvent.cs" />
+    <Compile Include="Events\EntityEvents.cs" />
+    <Compile Include="Implementation\HangarState.cs" />
+    <Compile Include="Controllers\IEntityController.cs" />
+    <Compile Include="ApiEntities\LandingGear.cs" />
+    <Compile Include="Utils\Log.cs" />
+    <Compile Include="Utils\Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sensor.cs" />
-    <Compile Include="Piston.cs" />
-    <Compile Include="TerminalAction.cs" />
+    <Compile Include="ApiEntities\Sensor.cs" />
+    <Compile Include="ApiEntities\AbstractPiston.cs" />
+    <Compile Include="Implementation\ShipHangar.cs" />
+    <Compile Include="Controllers\SpacePortPistonController.cs" />
+    <Compile Include="Controllers\TerminalAction.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="install.ps1" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>@powershell -ExecutionPolicy Bypass -File "$(ProjectDir)install.ps1" -Name "$(ProjectName)" -SourcePath "$(ProjectDir)</PostBuildEvent>

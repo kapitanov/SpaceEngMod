@@ -1,8 +1,13 @@
 using System;
 using System.Linq;
+
 using Sandbox.ModAPI;
 
-namespace SpaceEngMod
+using SPX.Station.Infrastructure.ApiEntities;
+using SPX.Station.Infrastructure.Controllers;
+using SPX.Station.Infrastructure.Utils;
+
+namespace SPX.Station.Infrastructure.Implementation
 {
     public sealed class AutoDoor
     {
@@ -40,14 +45,14 @@ namespace SpaceEngMod
 
             // Locate all pistons within D meters
             var pistons = Entities.Pistons
-                .Where(p => p.Entity.CustomName.StartsWith(AutoDoorController.Prefix, StringComparison.OrdinalIgnoreCase))
+                .Where(p => p.Entity.CustomName.StartsWith(Constants.AutoDoorPrefix, StringComparison.OrdinalIgnoreCase))
                 .Where(p => p.Entity.CubeGrid == _sensor.Entity.CubeGrid)
                 .Where(p => (p.Entity.GetPosition() - sensorPosition).Length() <= distance)
                 .ToList();
 
             // Locate all landing gears within D meters
             var landingGears = Entities.LandingGears
-                .Where(p => p.Entity.CustomName.StartsWith(AutoDoorController.Prefix, StringComparison.OrdinalIgnoreCase))
+                .Where(p => p.Entity.CustomName.StartsWith(Constants.AutoDoorPrefix, StringComparison.OrdinalIgnoreCase))
                 .Where(p => p.Entity.CubeGrid == _sensor.Entity.CubeGrid)
                 .Where(p => (p.Entity.GetPosition() - sensorPosition).Length() <= distance)
                 .ToList();
