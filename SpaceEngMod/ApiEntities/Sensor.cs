@@ -77,7 +77,8 @@ namespace SPX.Station.Infrastructure.ApiEntities
 
                 var options = new Options(Entity.CustomName);
                 Enum.TryParse(options.Get("Type", string.Empty), true, out _sensorType);
-
+                
+                Log.Write("Sensor name {0} has SensorType: {1}", Entity.CustomName, _sensorType);
 
                 return _sensorType;
             }

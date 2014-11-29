@@ -67,18 +67,6 @@ namespace SPX.Station.Infrastructure.ApiEntities
             LandingGears.Remove(entity);
         }
 
-        public static List<Connector> Connectors = new List<Connector>();
-
-        public static void Add(Connector entity)
-        {
-            Connectors.Add(entity);
-        }
-
-        public static void Remove(Connector entity)
-        {
-            Connectors.Remove(entity);
-        }
-
         public static List<InteriorLight> InteriorLights = new List<InteriorLight>();
 
         public static void Add(InteriorLight entity)

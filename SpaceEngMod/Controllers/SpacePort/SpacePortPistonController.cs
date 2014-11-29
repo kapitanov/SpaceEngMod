@@ -84,7 +84,7 @@ namespace SPX.Station.Infrastructure.Controllers.SpacePort
 
         private ShipHangar GetShipHangar(ButtonPanel button)
         {
-            Log.Write("GetShipHangar initiated {0}", button.Entity.CustomName);
+            //Log.Write("GetShipHangar initiated {0}", button.Entity.CustomName);
             if (!button.Entity.CustomName.StartsWith(Constants.SpacePortPrefix, StringComparison.OrdinalIgnoreCase) || button.ButtonType != ButtonType.Pistons)
             {
                 return null;

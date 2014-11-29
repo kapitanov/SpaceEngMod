@@ -27,10 +27,10 @@ namespace SPX.Station.Infrastructure.Implementation.SpacePort
         private void ChangeLights(SpacePortHangarLightsController ctrl, SignalType signalType)
         {
 
-            Log.Write("There is {0} lights totally", Entities.InteriorLights.Count);
-            Log.Write("There is {0} pistons in group {1} totally", Entities.InteriorLights.Count(p => p.HangarCode == _sensor.HangarCode), _sensor.HangarCode);
-            Log.Write("There is {0} lights totally with signalType {1}", Entities.InteriorLights.Count(i => i.HangarCode == _sensor.HangarCode && i.SignalType == signalType), signalType);
-            Log.Write("There is {0} lights totally with other signalType than {1}", Entities.InteriorLights.Count(i => i.HangarCode == _sensor.HangarCode && i.SignalType != signalType), signalType);
+            //Log.Write("There is {0} lights totally", Entities.InteriorLights.Count);
+            //Log.Write("There is {0} pistons in group {1} totally", Entities.InteriorLights.Count(p => p.HangarCode == _sensor.HangarCode), _sensor.HangarCode);
+            //Log.Write("There is {0} lights totally with signalType {1}", Entities.InteriorLights.Count(i => i.HangarCode == _sensor.HangarCode && i.SignalType == signalType), signalType);
+            //Log.Write("There is {0} lights totally with other signalType than {1}", Entities.InteriorLights.Count(i => i.HangarCode == _sensor.HangarCode && i.SignalType != signalType), signalType);
 
             var lightsToTurnOn =
                 Entities.InteriorLights.Where(

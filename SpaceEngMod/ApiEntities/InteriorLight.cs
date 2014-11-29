@@ -11,7 +11,7 @@ using SPX.Station.Infrastructure.Utils;
 
 namespace SPX.Station.Infrastructure.ApiEntities
 {
-    [MyEntityComponentDescriptor(typeof(MyObjectBuilder_SensorBlock))]
+    [MyEntityComponentDescriptor(typeof(MyObjectBuilder_InteriorLight))]
     public sealed class InteriorLight : EntityComponent<IMyFunctionalBlock>
     {
         public InteriorLight() : base("InteriorLight", "IMyFunctionalBlock") { }

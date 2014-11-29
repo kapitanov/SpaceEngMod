@@ -6,6 +6,7 @@ using Sandbox.Common;
 using Sandbox.ModAPI;
 
 using SPX.Station.Infrastructure.ApiEntities;
+using SPX.Station.Infrastructure.ApiEntities.Enums;
 using SPX.Station.Infrastructure.Events;
 using SPX.Station.Infrastructure.Implementation.SpacePort;
 using SPX.Station.Infrastructure.Utils;
@@ -66,7 +67,9 @@ namespace SPX.Station.Infrastructure.Controllers.SpacePort
 
         private HangarLight GetHangarLight(Sensor sensor)
         {
-            if (!sensor.Entity.CustomName.StartsWith(Constants.AutoDoorPrefix, StringComparison.OrdinalIgnoreCase))
+            //Log.Write("GetHangarLight initiated {0}", sensor.Entity.CustomName);
+
+            if (!sensor.Entity.CustomName.StartsWith(Constants.SpacePortPrefix, StringComparison.OrdinalIgnoreCase) || sensor.SensorType != SensorType.HangarLights)
             {
                 return null;
             }

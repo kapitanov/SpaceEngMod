@@ -84,14 +84,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApiEntities\Connector.cs" />
     <Compile Include="ApiEntities\Enums\SensorType.cs" />
     <Compile Include="ApiEntities\Enums\SignalType.cs" />
     <Compile Include="ApiEntities\ExtendedPistonBase.cs" />
     <Compile Include="ApiEntities\InteriorLight.cs" />
     <Compile Include="ApiEntities\PistonBase.cs" />
     <Compile Include="Controllers\SpacePort\SpacePortHangarLightsController.cs" />
-    <Compile Include="Controllers\SpacePort\SpacePortConnectorsController.cs" />
     <Compile Include="Controllers\SpacePort\SpacePortGearsController.cs" />
     <Compile Include="Controllers\SpacePort\SpacePortPistonController.cs" />
     <Compile Include="Implementation\AutoDoor\AutoDoor.cs" />
@@ -100,7 +98,6 @@
     <Compile Include="ApiEntities\ButtonPanel.cs" />
     <Compile Include="ApiEntities\Enums\ButtonType.cs" />
     <Compile Include="Implementation\SpacePort\HangarLight.cs" />
-    <Compile Include="Implementation\SpacePort\ShipHangarConnectors.cs" />
     <Compile Include="Implementation\SpacePort\ShipHangarGears.cs" />
     <Compile Include="Utils\Constants.cs" />
     <Compile Include="ApiEntities\Entities.cs" />
