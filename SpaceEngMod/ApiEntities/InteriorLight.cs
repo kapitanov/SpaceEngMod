@@ -12,15 +12,9 @@ using SPX.Station.Infrastructure.Utils;
 namespace SPX.Station.Infrastructure.ApiEntities
 {
     [MyEntityComponentDescriptor(typeof(MyObjectBuilder_SensorBlock))]
-    public sealed class Sensor : EntityComponent<IMySensorBlock>
+    public sealed class InteriorLight : EntityComponent<IMyFunctionalBlock>
     {
-        private string _hangarCode;
-
-        public Sensor()
-            : base("Sensor", "IMySensorBlock")
-        {
-            _sensorType = SensorType.AutoDoor;
-        }
+        public InteriorLight() : base("InteriorLight", "IMyFunctionalBlock") { }
 
         protected override void OnCreated()
         {
@@ -34,32 +28,20 @@ namespace SPX.Station.Infrastructure.ApiEntities
 
         protected override void Attach()
         {
-            Entity.StateChanged += OnStateChanged;
-            Entity.NeedsUpdate |= MyEntityUpdateEnum.EACH_10TH_FRAME;
+            
         }
 
         protected override void Detach()
         {
-            Entity.StateChanged -= OnStateChanged;
+            
         }
 
-        private void OnStateChanged(bool state)
-        {
-            switch (SensorType)
-            {
-                case SensorType.AutoDoor:
-                    EntityEvents.AutoDoorSensorStateChanged.Raise(this, state);
-                    break;
-                case SensorType.HangarLights:
-                    EntityEvents.HangarLightsSensorStateChanged.Raise(this, state);
-                    break;
-            }
-        }
 
         public string HangarCode
         {
             get
             {
+
                 var options = new Options(Entity.CustomName);
                 _hangarCode = options.Get("HC", string.Empty);
 
@@ -67,19 +49,23 @@ namespace SPX.Station.Infrastructure.ApiEntities
             }
         }
 
-        private SensorType _sensorType;
-        public SensorType SensorType
+
+        private SignalType _type;
+
+        private string _hangarCode;
+
+        public SignalType SignalType
         {
             get
             {
 
-                _sensorType = SensorType.None;
+                _type = SignalType.None;
 
                 var options = new Options(Entity.CustomName);
-                Enum.TryParse(options.Get("Type", string.Empty), true, out _sensorType);
+                Enum.TryParse(options.Get("Type", string.Empty), true, out _type);
 
 
-                return _sensorType;
+                return _type;
             }
         }
     }

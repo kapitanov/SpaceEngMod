@@ -5,11 +5,12 @@ using Sandbox.Common;
 using Sandbox.ModAPI;
 
 using SPX.Station.Infrastructure.ApiEntities;
+using SPX.Station.Infrastructure.ApiEntities.Enums;
 using SPX.Station.Infrastructure.Events;
-using SPX.Station.Infrastructure.Implementation;
+using SPX.Station.Infrastructure.Implementation.SpacePort;
 using SPX.Station.Infrastructure.Utils;
 
-namespace SPX.Station.Infrastructure.Controllers
+namespace SPX.Station.Infrastructure.Controllers.SpacePort
 {
     [MySessionComponentDescriptor(MyUpdateOrder.BeforeSimulation)]
     public sealed class SpacePortConnectorsController : MySessionComponentBase
@@ -20,7 +21,7 @@ namespace SPX.Station.Infrastructure.Controllers
         {
             if (!_initialized)
             {
-                using (Log.Scope("SpacePortGearsController.Initialize Version 1.4 \r\n"))
+                using (Log.Scope("SpacePortConnectorsController.Initialize Version 1.4 \r\n"))
                 {
                     EntityEvents.ConnectorsButtonPressed.Subscribe(EntityEvents_ButtonPressed);
                     EntityEvents.ConnectorsButtonUpdate100.Subscribe(EntityEvents_ButtonUpdate100);

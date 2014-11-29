@@ -4,10 +4,10 @@ using System.Linq;
 using Sandbox.ModAPI;
 
 using SPX.Station.Infrastructure.ApiEntities;
-using SPX.Station.Infrastructure.Controllers;
+using SPX.Station.Infrastructure.Controllers.AutoDoor;
 using SPX.Station.Infrastructure.Utils;
 
-namespace SPX.Station.Infrastructure.Implementation
+namespace SPX.Station.Infrastructure.Implementation.AutoDoor
 {
     public sealed class AutoDoor
     {

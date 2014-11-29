@@ -5,6 +5,7 @@ using Sandbox.Common.Components;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.ModAPI.Ingame;
 
+using SPX.Station.Infrastructure.ApiEntities.Enums;
 using SPX.Station.Infrastructure.Events;
 using SPX.Station.Infrastructure.Utils;
 

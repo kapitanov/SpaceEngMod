@@ -79,6 +79,18 @@ namespace SPX.Station.Infrastructure.ApiEntities
             Connectors.Remove(entity);
         }
 
+        public static List<InteriorLight> InteriorLights = new List<InteriorLight>();
+
+        public static void Add(InteriorLight entity)
+        {
+            InteriorLights.Add(entity);
+        }
+
+        public static void Remove(InteriorLight entity)
+        {
+            InteriorLights.Remove(entity);
+        }
+
         public static void PrintTerminalActions(string entityType, IMyTerminalBlock block)
         {
             return;

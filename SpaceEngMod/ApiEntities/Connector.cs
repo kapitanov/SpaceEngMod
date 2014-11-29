@@ -7,6 +7,7 @@ using Sandbox.ModAPI.Ingame;
 using Sandbox.ModAPI.Interfaces;
 
 using SPX.Station.Infrastructure.Controllers;
+using SPX.Station.Infrastructure.Controllers.Common;
 using SPX.Station.Infrastructure.Events;
 using SPX.Station.Infrastructure.Utils;
 
@@ -15,7 +16,7 @@ using IMyCubeBlock = Sandbox.ModAPI.IMyCubeBlock;
 namespace SPX.Station.Infrastructure.ApiEntities
 {
     [MyEntityComponentDescriptor(typeof(MyObjectBuilder_ConveyorConnector))]
-    public sealed class Connector : EntityComponent<IMyCubeBlock>
+    public sealed class Connector : EntityComponent<IMyTerminalBlock>
     {
         private readonly TerminalAction _lockAction;
         private readonly TerminalAction _unlockAction;

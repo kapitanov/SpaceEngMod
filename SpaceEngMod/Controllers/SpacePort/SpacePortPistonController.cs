@@ -1,29 +1,32 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 using Sandbox.Common;
 using Sandbox.ModAPI;
 
 using SPX.Station.Infrastructure.ApiEntities;
+using SPX.Station.Infrastructure.ApiEntities.Enums;
 using SPX.Station.Infrastructure.Events;
-using SPX.Station.Infrastructure.Implementation;
+using SPX.Station.Infrastructure.Implementation.SpacePort;
 using SPX.Station.Infrastructure.Utils;
 
-namespace SPX.Station.Infrastructure.Controllers
+namespace SPX.Station.Infrastructure.Controllers.SpacePort
 {
     [MySessionComponentDescriptor(MyUpdateOrder.BeforeSimulation)]
-    public sealed class SpacePortGearsController : MySessionComponentBase
+    public sealed class SpacePortPistonController : MySessionComponentBase
     {
+        private const float Distance = 25;
+        
         private bool _initialized;
 
         public override void UpdateBeforeSimulation()
         {
             if (!_initialized)
             {
-                using (Log.Scope("SpacePortGearsController.Initialize Version 1.4 \r\n"))
+                using (Log.Scope("SpacePortPistonController.Initialize Version 1.3 \r\n"))
                 {
-                    EntityEvents.GearsButtonPressed.Subscribe(EntityEvents_ButtonPressed);
-                    EntityEvents.GearsButtonUpdate100.Subscribe(EntityEvents_ButtonUpdate100);
+                    EntityEvents.PistonsButtonPressed.Subscribe(EntityEvents_ButtonPressed);
+                    EntityEvents.PistonsButtonUpdate100.Subscribe(EntityEvents_ButtonUpdate100);
                     _initialized = true;
                 }
             }
@@ -35,10 +38,10 @@ namespace SPX.Station.Infrastructure.Controllers
         {
             try
             {
-                var hangarGears = GetHangarGears(buttonPanel);
-                if (hangarGears != null)
+                var depot = GetShipHangar(buttonPanel);
+                if (depot != null)
                 {
-                    hangarGears.Toggle(this);
+                    depot.Toggle(this);
                 }
             }
             catch (Exception e)
@@ -56,12 +59,12 @@ namespace SPX.Station.Infrastructure.Controllers
             {
                 if ((MyAPIGateway.Session.Player.GetPosition() - buttonPanel.Entity.GetPosition()).Length() <= 2)
                 {
-                    var autodoor = GetHangarGears(buttonPanel);
+                    var autodoor = GetShipHangar(buttonPanel);
                     if (autodoor != null)
                     {
                         if (!_notificationShown)
                         {
-                            MyAPIGateway.Utilities.ShowNotification("This button controls hangar landing gears", 1000, MyFontEnum.Green);
+                            MyAPIGateway.Utilities.ShowNotification("This button controls hangar door", 1000, MyFontEnum.Green);
                             _notificationShown = true;
                         }
                     }
@@ -77,21 +80,21 @@ namespace SPX.Station.Infrastructure.Controllers
             }
         }
 
-        private readonly Dictionary<ButtonPanel, ShipHangarGears> _hangarGears = new Dictionary<ButtonPanel, ShipHangarGears>();
+        private readonly Dictionary<ButtonPanel, ShipHangar> _hangarPistons = new Dictionary<ButtonPanel, ShipHangar>();
 
-        private ShipHangarGears GetHangarGears(ButtonPanel button)
+        private ShipHangar GetShipHangar(ButtonPanel button)
         {
-            Log.Write("GetHangarGears initiated {0}", button.Entity.CustomName);
-            if (!button.Entity.CustomName.StartsWith(Constants.SpacePortPrefix, StringComparison.OrdinalIgnoreCase) || button.ButtonType != ButtonType.Gears)
+            Log.Write("GetShipHangar initiated {0}", button.Entity.CustomName);
+            if (!button.Entity.CustomName.StartsWith(Constants.SpacePortPrefix, StringComparison.OrdinalIgnoreCase) || button.ButtonType != ButtonType.Pistons)
             {
                 return null;
             }
 
-            ShipHangarGears shipHangar;
-            if (!_hangarGears.TryGetValue(button, out shipHangar))
+            ShipHangar shipHangar;
+            if (!_hangarPistons.TryGetValue(button, out shipHangar))
             {
-                shipHangar = new ShipHangarGears(button);
-                _hangarGears.Add(button, shipHangar);
+                shipHangar = new ShipHangar(button);
+                _hangarPistons.Add(button, shipHangar);
             }
 
             return shipHangar;

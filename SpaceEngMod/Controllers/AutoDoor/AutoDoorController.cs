@@ -7,10 +7,9 @@ using Sandbox.ModAPI;
 
 using SPX.Station.Infrastructure.ApiEntities;
 using SPX.Station.Infrastructure.Events;
-using SPX.Station.Infrastructure.Implementation;
 using SPX.Station.Infrastructure.Utils;
 
-namespace SPX.Station.Infrastructure.Controllers
+namespace SPX.Station.Infrastructure.Controllers.AutoDoor
 {
     [MySessionComponentDescriptor(MyUpdateOrder.BeforeSimulation)]
     public sealed class AutoDoorController : MySessionComponentBase
@@ -26,7 +25,7 @@ namespace SPX.Station.Infrastructure.Controllers
                 using (Log.Scope("AutoDoorController.Initialize"))
                 {
                     EntityEvents.AutoDoorButtonPressed.Subscribe(EntityEvents_ButtonPressed);
-                    EntityEvents.SensorStateChanged.Subscribe(EntityEvents_SensorStateChanged);
+                    EntityEvents.AutoDoorSensorStateChanged.Subscribe(EntityEvents_SensorStateChanged);
                     EntityEvents.PistonLimitReached.Subscribe(EntityEvents_PistonLimitReached);
                     EntityEvents.AutoDoorButtonUpdate100.Subscribe(EntityEvents_ButtonUpdate10);
                     _initialized = true;
@@ -144,26 +143,26 @@ namespace SPX.Station.Infrastructure.Controllers
         }
 
         private readonly Dictionary<AbstractPiston, LandingGear> _pendingLocks = new Dictionary<AbstractPiston, LandingGear>();
-        private readonly Dictionary<Sensor, AutoDoor> _autoDoors = new Dictionary<Sensor, AutoDoor>();
+        private readonly Dictionary<Sensor, Implementation.AutoDoor.AutoDoor> _autoDoors = new Dictionary<Sensor, Implementation.AutoDoor.AutoDoor>();
 
-        private AutoDoor GetAutodoor(Sensor sensor)
+        private Implementation.AutoDoor.AutoDoor GetAutodoor(Sensor sensor)
         {
             if (!sensor.Entity.CustomName.StartsWith(Constants.AutoDoorPrefix, StringComparison.OrdinalIgnoreCase))
             {
                 return null;
             }
 
-            AutoDoor autodoor;
+            Implementation.AutoDoor.AutoDoor autodoor;
             if (!_autoDoors.TryGetValue(sensor, out autodoor))
             {
-                autodoor = new AutoDoor(sensor);
+                autodoor = new Implementation.AutoDoor.AutoDoor(sensor);
                 _autoDoors.Add(sensor, autodoor);
             }
 
             return autodoor;
         }
 
-        private AutoDoor GetAutodoor(ButtonPanel buttonPanel)
+        private Implementation.AutoDoor.AutoDoor GetAutodoor(ButtonPanel buttonPanel)
         {
             if (!buttonPanel.Entity.CustomName.StartsWith(Constants.AutoDoorPrefix, StringComparison.OrdinalIgnoreCase))
             {

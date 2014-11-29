@@ -1,4 +1,4 @@
-﻿namespace SPX.Station.Infrastructure.ApiEntities
+﻿namespace SPX.Station.Infrastructure.ApiEntities.Enums
 {
     public enum ButtonType
     {

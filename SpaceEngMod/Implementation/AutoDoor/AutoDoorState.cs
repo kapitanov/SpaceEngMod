@@ -1,4 +1,4 @@
-namespace SPX.Station.Infrastructure.Implementation
+namespace SPX.Station.Infrastructure.Implementation.AutoDoor
 {
     public enum AutoDoorState
     {

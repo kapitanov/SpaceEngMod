@@ -3,6 +3,7 @@ using System;
 using Sandbox.ModAPI.Ingame;
 
 using SPX.Station.Infrastructure.Controllers;
+using SPX.Station.Infrastructure.Controllers.Common;
 using SPX.Station.Infrastructure.Events;
 using SPX.Station.Infrastructure.Utils;
 
