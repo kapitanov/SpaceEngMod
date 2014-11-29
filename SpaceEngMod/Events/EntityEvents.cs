@@ -10,6 +10,8 @@ namespace SPX.Station.Infrastructure.Events
 
         public static readonly EntityEvent<LandingGear, bool> LandingGearStateChanged = new EntityEvent<LandingGear, bool>();
 
+        public static readonly EntityEvent<Connector, bool> ConnectorStateChanged = new EntityEvent<Connector, bool>();
+
         public static readonly EntityEvent<ButtonPanel, int> PistonsButtonPressed =new EntityEvent<ButtonPanel, int>();
         public static readonly EntityEvent<ButtonPanel, int> GearsButtonPressed = new EntityEvent<ButtonPanel, int>();
         public static readonly EntityEvent<ButtonPanel, int> ConnectorsButtonPressed = new EntityEvent<ButtonPanel, int>();

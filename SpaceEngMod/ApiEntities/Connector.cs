@@ -1,15 +1,21 @@
+using System.Collections.Generic;
+
 using Sandbox.Common.Components;
 using Sandbox.Common.ObjectBuilders;
+using Sandbox.ModAPI;
 using Sandbox.ModAPI.Ingame;
+using Sandbox.ModAPI.Interfaces;
 
 using SPX.Station.Infrastructure.Controllers;
 using SPX.Station.Infrastructure.Events;
 using SPX.Station.Infrastructure.Utils;
 
+using IMyCubeBlock = Sandbox.ModAPI.IMyCubeBlock;
+
 namespace SPX.Station.Infrastructure.ApiEntities
 {
-    [MyEntityComponentDescriptor(typeof(MyObjectBuilder_LandingGear))]
-    public sealed class LandingGear : EntityComponent<IMyLandingGear>
+    [MyEntityComponentDescriptor(typeof(MyObjectBuilder_ConveyorConnector))]
+    public sealed class Connector : EntityComponent<IMyCubeBlock>
     {
         private readonly TerminalAction _lockAction;
         private readonly TerminalAction _unlockAction;
@@ -17,12 +23,25 @@ namespace SPX.Station.Infrastructure.ApiEntities
 
         private string _hangarCode;
 
-        public LandingGear()
-            : base("LandingGear", "IMyLandingGear")
+        public Connector()
+            : base("Connector", "IMyTerminalBlock")
         {
             _lockAction = new TerminalAction(this, TerminalAction.Lock);
             _unlockAction = new TerminalAction(this, TerminalAction.Unlock);
             _toggleLockAction = new TerminalAction(this, TerminalAction.SwitchLock);
+
+
+            using (Log.Scope("Connector Settins"))
+            {
+                List<ITerminalAction> resultList = new List<ITerminalAction>();
+                MyAPIGateway.TerminalActionsHelper.GetActions(Entity.GetType(), resultList);
+
+
+                foreach (var terminalAction in resultList)
+                {
+                    Log.Write("Id = {0}, Name = {1}, Icon = {2}", terminalAction.Id, terminalAction.Name, terminalAction.Icon);
+                }
+            }
         }
         
         public void Lock()
@@ -52,17 +71,17 @@ namespace SPX.Station.Infrastructure.ApiEntities
 
         protected override void Attach()
         {
-            Entity.StateChanged += OnStateChanged;
+            //Entity.StateChanged += OnStateChanged;
         }
 
         protected override void Detach()
         {
-            Entity.StateChanged -= OnStateChanged;
+            //Entity.StateChanged -= OnStateChanged;
         }
 
         private void OnStateChanged(bool state)
         {
-            EntityEvents.LandingGearStateChanged.Raise(this, state);
+            EntityEvents.ConnectorStateChanged.Raise(this, state);
         }
 
         public string HangarCode
