@@ -4,10 +4,10 @@ using System.Linq;
 using Sandbox.ModAPI;
 
 using SPX.Station.Infrastructure.ApiEntities;
-using SPX.Station.Infrastructure.Controllers;
+using SPX.Station.Infrastructure.Controllers.SpacePort;
 using SPX.Station.Infrastructure.Utils;
 
-namespace SPX.Station.Infrastructure.Implementation
+namespace SPX.Station.Infrastructure.Implementation.SpacePort
 {
     public class ShipHangar
     {
@@ -32,8 +32,8 @@ namespace SPX.Station.Infrastructure.Implementation
             var distance = options.Get("R", 25f);
             var velocity = options.Get("V", 1f);
 
-            Log.Write("There is {0} pistons totally", Entities.Pistons.Count);
-            Log.Write("There is {0} pistons in group {1} totally", Entities.Pistons.Count(p => p.HangarCode == _button.HangarCode), _button.HangarCode);
+            //Log.Write("There is {0} pistons totally", Entities.Pistons.Count);
+            //Log.Write("There is {0} pistons in group {1} totally", Entities.Pistons.Count(p => p.HangarCode == _button.HangarCode), _button.HangarCode);
 
             var pistons =
                 Entities.Pistons.Where(
@@ -41,7 +41,7 @@ namespace SPX.Station.Infrastructure.Implementation
                     .Where(p => p.HangarCode.Equals(_button.HangarCode, StringComparison.OrdinalIgnoreCase))
                     .ToList();
 
-            Log.Write("Got {0} pistons, within {1}m while button is {2}", pistons.Count, distance, _button.Entity.CustomName);
+            //Log.Write("Got {0} pistons, within {1}m while button is {2}", pistons.Count, distance, _button.Entity.CustomName);
 
             if (toOpen)
             {
@@ -49,7 +49,7 @@ namespace SPX.Station.Infrastructure.Implementation
 
                 foreach (var piston in pistons)
                 {
-                    piston.SetVelocity(-velocity);
+                    piston.SetVelocity(velocity);
                 }
 
                 Log.Write("HANGAR OPEN");
@@ -63,7 +63,7 @@ namespace SPX.Station.Infrastructure.Implementation
 
                 foreach (var piston in pistons)
                 {
-                    piston.SetVelocity(velocity);
+                    piston.SetVelocity(-velocity);
                 }
 
                 Log.Write("HANGAR CLOSED");

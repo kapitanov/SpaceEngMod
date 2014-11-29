@@ -4,7 +4,8 @@ namespace SPX.Station.Infrastructure.Events
 {
     public static class EntityEvents
     {
-        public static readonly EntityEvent<Sensor, bool> SensorStateChanged = new EntityEvent<Sensor, bool>();
+        public static readonly EntityEvent<Sensor, bool> AutoDoorSensorStateChanged = new EntityEvent<Sensor, bool>();
+        public static readonly EntityEvent<Sensor, bool> HangarLightsSensorStateChanged = new EntityEvent<Sensor, bool>();
 
         public static readonly EntityEvent<AbstractPiston, bool> PistonLimitReached = new EntityEvent<AbstractPiston, bool>();
 

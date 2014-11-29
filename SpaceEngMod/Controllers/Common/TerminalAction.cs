@@ -6,7 +6,7 @@ using Sandbox.ModAPI.Interfaces;
 
 using SPX.Station.Infrastructure.Utils;
 
-namespace SPX.Station.Infrastructure.Controllers
+namespace SPX.Station.Infrastructure.Controllers.Common
 {
     public sealed class TerminalAction
     {

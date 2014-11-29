@@ -3,6 +3,7 @@ using System;
 using Sandbox.ModAPI.Ingame;
 
 using SPX.Station.Infrastructure.Controllers;
+using SPX.Station.Infrastructure.Controllers.Common;
 using SPX.Station.Infrastructure.Events;
 using SPX.Station.Infrastructure.Utils;
 
@@ -95,8 +96,6 @@ namespace SPX.Station.Infrastructure.ApiEntities
             {
                 var options = new Options(Entity.CustomName);
                 _hangarCode = options.Get("HC", string.Empty);
-
-                Log.Write("Pistons HangarCode Received ({0}) on Piston {1}", _hangarCode, Entity.CustomName);
 
                 return _hangarCode;
             }

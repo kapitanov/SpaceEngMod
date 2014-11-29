@@ -3,7 +3,9 @@ using Sandbox.Common.ObjectBuilders;
 using Sandbox.ModAPI.Ingame;
 
 using SPX.Station.Infrastructure.Controllers;
+using SPX.Station.Infrastructure.Controllers.Common;
 using SPX.Station.Infrastructure.Events;
+using SPX.Station.Infrastructure.Utils;
 
 namespace SPX.Station.Infrastructure.ApiEntities
 {
@@ -13,6 +15,8 @@ namespace SPX.Station.Infrastructure.ApiEntities
         private readonly TerminalAction _lockAction;
         private readonly TerminalAction _unlockAction;
         private readonly TerminalAction _toggleLockAction;
+
+        private string _hangarCode;
 
         public LandingGear()
             : base("LandingGear", "IMyLandingGear")
@@ -60,6 +64,17 @@ namespace SPX.Station.Infrastructure.ApiEntities
         private void OnStateChanged(bool state)
         {
             EntityEvents.LandingGearStateChanged.Raise(this, state);
+        }
+
+        public string HangarCode
+        {
+            get
+            {
+                var options = new Options(Entity.CustomName);
+                _hangarCode = options.Get("HC", string.Empty);
+
+                return _hangarCode;
+            }
         }
     }
 }

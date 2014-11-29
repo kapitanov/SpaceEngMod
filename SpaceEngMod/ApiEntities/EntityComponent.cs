@@ -5,6 +5,7 @@ using Sandbox.Common.ObjectBuilders;
 using Sandbox.ModAPI.Ingame;
 
 using SPX.Station.Infrastructure.Controllers;
+using SPX.Station.Infrastructure.Controllers.Common;
 using SPX.Station.Infrastructure.Utils;
 
 namespace SPX.Station.Infrastructure.ApiEntities
@@ -149,7 +150,7 @@ namespace SPX.Station.Infrastructure.ApiEntities
 
         public override void Close()
         {
-            //using (Log.Scope("{0}.Close()", _name))
+            //using (Log.Scope("{0}.ToggleGreen()", _name))
             //{
             //    try
             //    {

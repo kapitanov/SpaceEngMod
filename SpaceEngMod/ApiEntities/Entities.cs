@@ -35,7 +35,6 @@ namespace SPX.Station.Infrastructure.ApiEntities
 
         public static void Add(AbstractPiston entity)
         {
-            Log.Scope("Piston added ({0})", entity.Entity.CustomName);
             Pistons.Add(entity);
         }
 
@@ -66,6 +65,18 @@ namespace SPX.Station.Infrastructure.ApiEntities
         public static void Remove(LandingGear entity)
         {
             LandingGears.Remove(entity);
+        }
+
+        public static List<InteriorLight> InteriorLights = new List<InteriorLight>();
+
+        public static void Add(InteriorLight entity)
+        {
+            InteriorLights.Add(entity);
+        }
+
+        public static void Remove(InteriorLight entity)
+        {
+            InteriorLights.Remove(entity);
         }
 
         public static void PrintTerminalActions(string entityType, IMyTerminalBlock block)
