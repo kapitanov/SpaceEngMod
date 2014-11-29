@@ -56,7 +56,7 @@ namespace SPX.Station.Infrastructure.Implementation.SpacePort
                 interiorLight.TurnOff();
             }
 
-            MyAPIGateway.Utilities.ShowNotification(string.Format("Hangar with Code is {0}", signalType));
+            MyAPIGateway.Utilities.ShowNotification(string.Format("Hangar with code {0} is {1}", _sensor.HangarCode, signalType));
         }
 
         public void ToggleGreen(SpacePortHangarLightsController ctrl)
