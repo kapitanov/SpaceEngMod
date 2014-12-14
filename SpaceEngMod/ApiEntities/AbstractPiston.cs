@@ -30,8 +30,9 @@ namespace SPX.Station.Infrastructure.ApiEntities
         public void SetVelocity(float velocity)
         {
             ResetVelocity(); // V = -0.5
+            IncreaseVelocity(); // V=0
 
-            var velocityAbs = velocity > 0 ? velocity + 0.5 : -velocity;
+            var velocityAbs = velocity > 0 ? velocity : -velocity;
             var count = (int)Math.Round(velocityAbs / 0.5);
 
             for (var i = 0; i < count; i++)
