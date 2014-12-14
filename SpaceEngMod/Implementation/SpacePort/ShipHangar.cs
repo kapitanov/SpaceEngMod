@@ -18,6 +18,8 @@ namespace SPX.Station.Infrastructure.Implementation.SpacePort
         public ShipHangar(ButtonPanel button)
         {
             _button = button;
+
+            Log.Write("ShipHangar {0} created: ", button.HangarCode);
         }
 
         public void Open(SpacePortPistonController ctrl)
@@ -29,7 +31,6 @@ namespace SPX.Station.Infrastructure.Implementation.SpacePort
         {
             var options = new Options(_button.Entity.CustomName);
 
-            var distance = options.Get("R", 25f);
             var velocity = options.Get("V", 1f);
 
             //Log.Write("There is {0} pistons totally", Entities.Pistons.Count);
