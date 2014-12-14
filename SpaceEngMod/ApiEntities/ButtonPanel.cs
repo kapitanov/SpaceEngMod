@@ -108,5 +108,32 @@ namespace SPX.Station.Infrastructure.ApiEntities
                 return _buttonType;
             }
         }
+
+        public override bool Equals(object obj)
+        {
+            //       
+            // See the full list of guidelines at
+            //   http://go.microsoft.com/fwlink/?LinkID=85237  
+            // and also the guidance for operator== at
+            //   http://go.microsoft.com/fwlink/?LinkId=85238
+            //
+
+            if (obj == null || !(obj is ButtonPanel))
+            {
+                return false;
+            }
+
+            return GetHashCode() == obj.GetHashCode();
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 13;
+
+            string hashString = string.IsNullOrWhiteSpace(Entity.CustomName) ? string.Empty : Entity.CustomName;
+            hashCode = 7 * hashCode + hashString.GetHashCode();
+
+            return hashCode;
+        }
     }
 }

@@ -19,6 +19,8 @@ namespace SPX.Station.Infrastructure.Implementation.SpacePort
         {
             _button = button;
             HangarGearsState = HangarState.Closed;
+
+            Log.Write("Hangar {0} gears created: ", button.HangarCode);
         }
 
         public void Open(SpacePortGearsController ctrl)
